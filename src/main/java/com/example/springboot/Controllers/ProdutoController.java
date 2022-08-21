@@ -3,10 +3,12 @@ package com.example.springboot.Controllers;
 import com.example.springboot.Models.ProdutoModel;
 import com.example.springboot.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +24,12 @@ public class ProdutoController {
         List<ProdutoModel> produtoModelList = produtoRepository.findAll();
         if (produtoModelList.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            //adicionando método para cada produto ter seu proprio link salvo
         }else {
+            for (ProdutoModel produto: produtoModelList){
+                long id = produto.getIdProduto();
+                produto.add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ProdutoController.class).getOneProduto(id)).withSelfRel());
+            }
             return new ResponseEntity<List<ProdutoModel>>(produtoModelList, HttpStatus.OK);
         }
     }
