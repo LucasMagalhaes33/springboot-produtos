@@ -40,6 +40,7 @@ public class ProdutoController {
         if (!produto0.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else{
+            produto0.get().add(WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(ProdutoController.class).getOneProduto(id)).withRel("lista de produtos"));
             return new ResponseEntity<ProdutoModel>(produto0.get(), HttpStatus.OK);
         }
     }
